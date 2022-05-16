@@ -1,0 +1,39 @@
+pipeline {
+    agent any 
+    stages {
+        stage('Clone the repo') {
+            steps {
+                echo 'clone the repo'
+                sh 'rm -fr HelloJenkins'
+                sh 'git clone https://github.com/hamicoo/HelloJenkins.git'
+            }
+        }
+        stage('remove old docker container') {
+            steps {
+                echo 'remove old docker container'
+                sh 'docker container rm -f  my-apache-app3'
+            }
+        }
+        stage('setup new docker container') {
+            steps {
+                echo 'set up new docker container '
+                sh 'docker run -dit --name my-apache-app3 -p 8030:80 -v "$PWD/HelloJenkins":/usr/local/apache2/htdocs/ httpd:2.4'
+            }
+        }
+        stage ('check if server is up') {
+            steps {
+                
+                
+             
+                         sh  'curl -Is  http://192.168.181.128:8030/ | head -n 1'
+        
+                
+                
+            
+                
+            }
+            
+            
+        }
+    }
+}
